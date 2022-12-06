@@ -16,7 +16,7 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
 
-app.use(routes);
+
 // 
 // Security Middleware
 if (!isProduction) {
@@ -41,6 +41,8 @@ app.use(
     }
   })
 );
+
+app.use(routes);
 
 // backend/app.js
 // ...
@@ -72,6 +74,7 @@ app.use((err, _req, res, _next) => {
     stack: isProduction ? null : err.stack,
   });
 });
+
 
 
 module.exports = app;
