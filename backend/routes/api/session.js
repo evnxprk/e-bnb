@@ -26,9 +26,9 @@ const validateLogin = [
 router.post(
   '/',
   async (req, res, next) => {
-    const { credential, password } = req.body;
+    const { firstName, lastName, credential, password } = req.body;
 
-    const user = await User.login({ credential, password });
+    const user = await User.login({ firstName, lastName, credential, password });
 
     if (!user) {
       const err = new Error('Login failed');
@@ -76,9 +76,9 @@ router.post(
   '/',
   validateLogin,
   async (req, res, next) => {
-    const { credential, password } = req.body;
+    const { firstName, lastName, credential, password } = req.body;
 
-    const user = await User.login({ credential, password });
+    const user = await User.login({ firstName, lastName, credential, password });
 
     if (!user) {
       const err = new Error('Login failed');
