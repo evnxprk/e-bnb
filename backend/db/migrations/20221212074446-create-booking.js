@@ -1,5 +1,10 @@
 'use strict';
 
+let options = {};
+if (process.env.NODE_ENV === "production") {
+  options.schema = process.env.SCHEMA; // define your schema in options object
+}
+
 const { sequelize } = require('../models');
 
 /** @type {import('sequelize-cli').Migration} */
@@ -15,9 +20,15 @@ module.exports = {
       spotId: {
         allowNull: false,
         unique: true,
+        references: {
+          model: 'Spots'
+        },
         type: Sequelize.INTEGER
       },
       userId: {
+        references: {
+          model: 'Users'
+        },
         allowNull: false,
         type: Sequelize.INTEGER
       },
@@ -39,7 +50,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    },options);
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Bookings');

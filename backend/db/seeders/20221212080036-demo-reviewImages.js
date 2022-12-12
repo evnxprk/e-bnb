@@ -13,17 +13,16 @@ module.exports = {
       [{
           reviewId: 1,
           url: "www.fakeURL.com",
-        }],
-      [{
+        },
+        {
           reviewId: 2,
           url: "www.fakeURL2.com",
-        }],
-      [{
+        },
+      {
           reviewId: 3,
           url: "www.fakeURL3.com",
         },
-      ],
-      [{
+      {
         reviewId: 4,
           url: "www.fakeURL4.com",
         }],

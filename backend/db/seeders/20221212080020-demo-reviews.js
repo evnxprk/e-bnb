@@ -17,25 +17,19 @@ module.exports = {
             "This place has such great vibes and I cannot wait to stay here again!",
           stars: 4,
         },
-      ],
-      [
         {
           spotId: 2,
           userId: 2,
           review:
-            "The owner of this house was a great host and am recommending her a lot.",
+            "The owner of this house was a great host and am recommending her.",
           stars: 5,
         },
-      ],
-      [
         {
           spotId: 3,
           userId: 3,
           review: "The place was cozy, small, and great for intimate settings.",
           stars: 4,
         },
-      ],
-      [
         {
           spotId: 4,
           userId: 4,

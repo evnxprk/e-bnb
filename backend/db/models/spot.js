@@ -13,16 +13,15 @@ module.exports = (sequelize, DataTypes) => {
      Spot.hasMany(models.Review, {foreignKey: "spotId"})
      Spot.hasMany(models.Booking, {foreignKey: "spotId"})
      Spot.hasMany(models.SpotImage, {foriengKey: "spotId"})
+     Spot.belongsTo(models.User,{foreignKey:"ownerId"})
     }
   }
   Spot.init(
     {
       ownerId: {
-        unique: true,
         type: DataTypes.INTEGER,
       },
       address: {
-        unique: true,
         type: DataTypes.STRING,
       },
       city: {
@@ -46,7 +45,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DECIMAL,
       },
       name: {
-        unique: true,
         allowNull: false,
         type: DataTypes.STRING,
       },

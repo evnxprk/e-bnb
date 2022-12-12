@@ -15,22 +15,16 @@ module.exports = {
           url: "www.fakeURL.com/1",
           preview: true,
         },
-      ],
-      [
         {
           spotId: 2,
           url: "www.fakeURL.com/2",
           preview: true,
         },
-      ],
-      [
         {
           spotId: 3,
           url: "www.fakeURL.com/3",
           preview: true,
         },
-      ],
-      [
         {
           spotId: 4,
           url: "www.fakeURL.com/4",
