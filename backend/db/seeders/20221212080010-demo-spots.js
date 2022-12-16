@@ -49,7 +49,7 @@ module.exports = {
           price: 45,
         },
         {
-          ownerId: 4,
+          ownerId: 2,
           address: "3000 Palos Verdes Blvd",
           city: "Palos Verdes",
           state: "CA",
@@ -60,6 +60,19 @@ module.exports = {
           description:
             "Can't wait to see the beach? This is it, it's next to the beach!",
           price: 50,
+        },
+        {
+          ownerId: 3,
+          address: "4000 Palos Verdes Blvd",
+          city: "Palos Verdes",
+          state: "CA",
+          country: "USA",
+          lat: "01.05",
+          lng: "1.02",
+          name: "BTS Lovers",
+          description:
+            "Love BTS? Well this is it.",
+          price: 150,
         },
       ],
       {}
@@ -73,7 +86,7 @@ module.exports = {
       options,
       {
         name: {
-          [Op.in]: ["Sherman Oaks", "Finding Nemo", "Shabalaba Dingdong", "Fake User"],
+          [Op.in]: ["Sherman Oaks", "Finding Nemo", "Shabalaba Dingdong", "Fake User, BTS Lovers"],
         },
       },
       {}

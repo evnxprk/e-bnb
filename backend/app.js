@@ -40,10 +40,10 @@ app.use(
       httpOnly: true
     }
   })
-);
-
-app.use(routes);
-
+  );
+  
+  
+  app.use(routes);
 // backend/app.js
 // ...
 // Catch unhandled requests and forward to error handler.

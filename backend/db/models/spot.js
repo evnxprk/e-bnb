@@ -25,35 +25,27 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       city: {
-        allowNull: false,
         type: DataTypes.STRING,
       },
       state: {
-        allowNull: false,
         type: DataTypes.STRING,
       },
       country: {
-        allowNull: false,
         type: DataTypes.STRING,
       },
       lat: {
-        allowNull: false,
-        type: DataTypes.DECIMAL,
+       type: DataTypes.DECIMAL,
       },
       lng: {
-        allowNull: false,
-        type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL,
       },
       name: {
-        allowNull: false,
         type: DataTypes.STRING,
       },
       description: {
-        type: DataTypes.STRING,
-        allowNull:false,
+        type: DataTypes.STRING
       },
       price: {
-        allowNull: false,
         type: DataTypes.DECIMAL,
       },
     },
