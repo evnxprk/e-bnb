@@ -1,7 +1,6 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model, Validator } = require("sequelize");
+const bcrypt = require("bcryptjs");
 module.exports = (sequelize, DataTypes) => {
   class Spot extends Model {
     /**
@@ -10,10 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-     Spot.hasMany(models.Review, {foreignKey: "spotId"})
-     Spot.hasMany(models.Booking, {foreignKey: "spotId"})
-     Spot.hasMany(models.SpotImage, {foriengKey: "spotId"})
-     Spot.belongsTo(models.User,{foreignKey:"ownerId"})
+      Spot.hasMany(models.Review, { foreignKey: "spotId" });
+      Spot.hasMany(models.Booking, { foreignKey: "spotId" });
+      Spot.hasMany(models.SpotImage, { foriengKey: "spotId" });
+      Spot.belongsTo(models.User, { foreignKey: "ownerId" });
     }
   }
   Spot.init(
@@ -34,16 +33,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       lat: {
-       type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL,
       },
       lng: {
-      type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL,
       },
       name: {
         type: DataTypes.STRING,
       },
       description: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       price: {
         type: DataTypes.DECIMAL,
