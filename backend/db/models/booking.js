@@ -17,19 +17,14 @@ module.exports = (sequelize, DataTypes) => {
     {
       spotId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true,
       },
       userId: {
-        allowNull: false,
         type: DataTypes.INTEGER,
       },
       startDate: {
-        allowNull: false,
         type: DataTypes.DATE,
       },
       endDate: {
-        allowNull: false,
         type: DataTypes.DATE,
       },
     },
