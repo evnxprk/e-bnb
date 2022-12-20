@@ -18,19 +18,6 @@ const { route } = require("./users");
 const spot = require("../../db/models/spot.js");
 
 // const spot = require("../../db/models/spots");
-
-const validateBooking = [
-  check("startDate").isDate().withMessage("Must be a valid Date (YYYY-MM-DD)"),
-  check("endDate").isDate().withMessage("Must be a valid Date (YYYY-MM-DD)"),
-  check("endDate").custom((value, { req }) => {
-    if (new Date(value).getTime() <= new Date(req.body.startDate).getTime()) {
-      throw new Error("endDate cannot be on or before startDate");
-    }
-    return true;
-  }),
-  handleValidationErrors,
-];
-
 const validateSpot = [
   check("address")
     .exists({ checkFalsy: true })
@@ -337,7 +324,7 @@ router.get("/:spotId/reviews", async (req, res, next) => {
 
 //? Create a Review for a Spot based on the Spot's id
 
-router.post("/:spotId/reviews", requireAuth, async (req, res) => {
+router.post("/:spotId/reviews", validateReview, requireAuth, async (req, res) => {
   const userId = req.user.id;
   const spotId = req.params.spotId;
   const { review, stars } = req.body;
