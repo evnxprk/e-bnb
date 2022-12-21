@@ -14,6 +14,7 @@ const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { Op } = require("sequelize");
 
+//! delete a review image
 router.delete("/imageId", requireAuth, async (req, res, next) => {
   const reviewImage = await ReviewImage.findByPk(req.params.imageId, {
     where: {

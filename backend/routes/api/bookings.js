@@ -105,36 +105,45 @@ router.get("/current", requireAuth, async (req, res) => {
         where: {
             userId: req.user.id
         },
-        include:{ 
+        include:[{ 
             model: Spot,
             attributes: {
                 exclude: 
                 ['createdAt', 'updatedAt', 'description']
             },
-            include: {
-                model: SpotImage,
-                where: {
-                    preview: true
-                },
-                attributes: 
-                [
-                    "url"
-                ]
-            }
-        }
+        }]
     })
-    for(let i = 0; i < myBooking.length; i++) {
-        const bookings = myBooking[i].toJSON()
-        console.log(bookings)
-        const previewImage = booking.SpotImages
 
-        if(previewImage) {
-            bookings.Spot.previewImage = previewImage.url
+    let bookingsArr = []
+
+    for(let i = 0; i < myBooking.length; i++) {
+        const booking = myBooking[i].toJSON()
+        // console.log(bookings)
+        const previewImage = await SpotImage.findAll({
+            where: {
+                [Op.and]: [
+                    {
+                        spotId: booking.spotId
+                    },
+                    {
+                        preview: true
+                    }
+                ]
+            },
+            raw: true
+        })
+        console.log(previewImage)
+
+        if(previewImage[0]) {
+            booking.Spot.previewImage = previewImage[0].url
+            bookingsArr.push(booking)
         } else {
-            bookings.Spot.previewImage = null
+            booking.Spot.previewImage = null
+            bookingsArr.push(booking)
         }
-        res.json({Bookings:bookings})
+        
     }
+    res.json({Bookings:bookingsArr})
 })
 
 module.exports = router;

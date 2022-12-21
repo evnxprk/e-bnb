@@ -11,7 +11,7 @@ const {
   ReviewImage,
   Review,
 } = require("../../db/models");
-
+ //! delete a spot image 
 router.delete("/:imageId", requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
   const spotImage = await SpotImage.findByPk(spotId);
@@ -24,7 +24,7 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
     });
   }
 
-  await SpotImage.destroy();
+  spotImage.destroy();
   res.json({
     message: "Successfully deleted",
     statusCode: 200,
