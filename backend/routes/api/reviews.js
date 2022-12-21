@@ -1,6 +1,10 @@
 const express = require("express");
 
-const { setTokenCookie, requireAuth } = require("../../utils/auth");
+const {
+  setTokenCookie,
+  requireAuth,
+  restoreUser,
+} = require("../../utils/auth");
 const {
   User,
   Spot,
@@ -42,9 +46,22 @@ router.get("/current", requireAuth, async (req, res, next) => {
       },
       {
         model: Spot,
+        attributes: [
+          "id",
+          "ownerId",
+          "address",
+          "city",
+          "state",
+          "country",
+          "lat",
+          "lng",
+          "name",
+          "price",
+        ],
       },
       {
         model: ReviewImage,
+        attributes: ["id", "url"],
       },
     ],
   });
@@ -53,41 +70,54 @@ router.get("/current", requireAuth, async (req, res, next) => {
 
 //? Add an Image to a Review based on the Review's id
 
-router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
-  const { url } = req.body;
-  const reviewId = req.params.reviewId;
+router.post(
+  "/:reviewId/images",
+  restoreUser,
+  requireAuth,
+  async (req, res, next) => {
+    const { url } = req.body;
+    const reviewId = req.params.reviewId;
 
-  let review = await Review.findByPk(reviewId);
+    const review = await Review.findByPk(reviewId);
 
-  if (!review) {
-    res.status(404);
+    if (!review) {
+      res.status(404);
+      res.json({
+        message: "Review couldn't be found",
+        statusCode: 404,
+      });
+    }
+
+    if (review.userId !== req.user.id) {
+      res.status(403);
+      res.json({
+        message: "Forbidden",
+        statusCode: 403,
+      });
+    }
+    const reviewImage = await ReviewImage.findAll({
+      where: {
+        reviewId: reviewId,
+      },
+    });
+    if (reviewImage.length >= 10) {
+      res.status(403);
+      res.json({
+        message: "Maximum number of images for this resource was reached",
+        statusCode: 403,
+      });
+    }
+    const firstReviewImage = await ReviewImage.create({
+      reviewId,
+      url,
+    });
+    res.status(200);
     res.json({
-      message: "Review couldn't be found",
-      statusCode: 404,
+      id: firstReviewImage.id,
+      url: firstReviewImage.url,
     });
   }
-  const reviewImage = await ReviewImage.findAll({
-    where: {
-      reviewId: reviewId,
-    },
-  });
-  if (reviewImage.length >= 10) {
-    res.status(403);
-    res.json({
-      message: "Maximum number of images for this resource was reached",
-      statusCode: 403,
-    });
-  }
-  const firstReviewImage = await ReviewImage.create({
-    reviewId,
-    url,
-  });
-  res.status(200);
-  res.json({
-    id: firstReviewImage.id,
-    url: firstReviewImage.url,
-  });
-});
+);
 
 //? edit a review
 
@@ -107,35 +137,39 @@ router.put("/:reviewId", validateReview, requireAuth, async (req, res) => {
   }
 
   if (userId !== updateReview.userId) {
-    res.json({message: "Must be authorized user!"})
+    res.status(403)
+    res.json({ 
+      message: "Forbidden",
+      statusCode: 403 
+    });
   }
 
-  if(review) updateReview.review = review
-  if(stars) updateReview.stars = stars
+  if (review) updateReview.review = review;
+  if (stars) updateReview.stars = stars;
 
-  await updateReview.save()
-  res.json(updateReview)
+  await updateReview.save();  
+  res.json(updateReview);
 });
 
 //? delete a review
 
 router.delete("/:reviewId", requireAuth, async (req, res, next) => {
-  const { user} = req
+  const { user } = req;
   const deleteReview = await Review.findByPk(req.params.reviewId);
 
-  if(user.id !== deleteReview.userId) {
+  if (user.id !== deleteReview.userId) {
     res.json({
       message: "Forbidden",
-      statusCode: 403
-    })
+      statusCode: 403,
+    });
   }
-if(!deleteReview) {
-  res.status(404)
-  res.json({
-    message: "Review couldn't be found",
-    statusCode: 404,
-  });
-}
+  if (!deleteReview) {
+    res.status(404);
+    res.json({
+      message: "Review couldn't be found",
+      statusCode: 404,
+    });
+  }
   deleteReview.destroy();
   res.json({
     message: "Successfully deleted",

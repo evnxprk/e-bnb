@@ -14,7 +14,7 @@ const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { Op } = require("sequelize");
 
-//! delete a review image
+//? delete a review image
 router.delete("/:imageId", requireAuth, async (req, res, next) => {
   const reviewImage = await ReviewImage.findByPk(req.params.imageId, {
     where: {
@@ -27,6 +27,14 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
       message: "Review Image could not be found",
       statusCode: 404,
     });
+  }
+
+  if(reviewImage.userId !== req.user.id) {
+    res.status(403)
+    res.json({
+        message: "Forbidden",
+        statusCode: 403
+    })
   }
 
   await reviewImage.destroy();

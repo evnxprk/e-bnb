@@ -12,7 +12,7 @@ const {
   Review,
 } = require("../../db/models");
 
-const { check } = require("express-validator");
+const { check, Result } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { route } = require("./users");
 const spot = require("../../db/models/spot.js");
@@ -94,7 +94,10 @@ router.get("/current", requireAuth, async (req, res, next) => {
     spotArr.push(spot);
   }
 
-  res.status(200).json({ Spots: spotArr });
+  res.status(200)
+  res.json({ 
+    Spots: spotArr 
+  });
 });
 
 //? GET ALL SPOTS // returns all spots
@@ -108,14 +111,14 @@ router.get("/", async (req, res) => {
     size = 20;
   }
 
-  page = parseInt(page);
+  page = parseInt(page);  
   size = parseInt(size);
 
-  const pag = {};
+  let pagination = {};
 
   if (size >= 1 && page >= 1) {
-    pag.limit = size;
-    pag.offset = size * (page - 1);
+    pagination.limit = size;
+    pagination.offset = size * (page - 1);
   } else {
     res.json({
       message: "Validation Error",
@@ -134,12 +137,13 @@ router.get("/", async (req, res) => {
   }
 
   const spots = await Spot.findAll({
-    ...pag,
+    ...pagination,
   });
 
-  const spotsArr = [];
+  let spotsArr = [];
 
   for (let spot of spots) {
+    spot = spot.toJSON()
     const rating = await Review.findAll({
       where: {
         spotId: spot.id,
@@ -147,11 +151,21 @@ router.get("/", async (req, res) => {
       attributes: [[Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"]],
       raw: true,
     });
-    spotArr = {
-      ...spot.dataValues,
-      avgRating: Number(rating[0].avgRating),
-    };
-    spotsArr.push(spotArr);
+  
+    spot.avgRating = Number(rating[0].avgRating);
+
+    const imageURL = await SpotImage.findOne({
+      where: {
+        spotId: spot.id,
+        preview: true
+      },
+      attributes: ['url']
+    })
+
+    if(imageURL) {
+      spot.previewImage = imageURL.url
+    }
+    spotsArr.push(spot);
   }
 
   res.json({ Spots: spotsArr, page, size });
@@ -165,10 +179,6 @@ router.get("/:spotId", async (req, res) => {
   const spots = await Spot.findByPk(spotId, {
     include: [
       {
-        model: User,
-        attributes: ["firstName", "lastName", "id"],
-      },
-      {
         model: SpotImage,
         attributes: ["id", "url", "preview"],
       },
@@ -178,7 +188,31 @@ router.get("/:spotId", async (req, res) => {
     res.status(404);
     res.json({ message: "Spot can't be found", statusCode: 404 });
   }
-  res.json(spots);
+
+  const reviewCount = await Review.count({where: { spotId: spotId }})
+  const starTotal = await Review.sum('stars', { where: {spotId: spotId}})
+
+  const spotImage = await SpotImage.findAll({where: {spotId: spotId},attributes: ['id', 'url', 'preview']})
+
+  const spotOwner = await User.findByPk(spots.ownerId, {
+    attributes: ['id','firstName', 'lastName']
+  })
+
+  let avgRating;
+  if(starTotal === null) {
+    avgRating = 0
+  } else {
+    avgRating = (starTotal / reviewCount)
+  }
+
+  const spotDetails = spots.toJSON()
+
+ spotDetails.numReviews = reviewCount
+ spotDetails.avgStarRating = avgRating
+ spotDetails.spotImage = SpotImage
+ spotDetails.Owner = spotOwner
+
+ res.json(spotDetails)
 });
 
 //? Create a spot
