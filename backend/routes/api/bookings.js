@@ -123,7 +123,7 @@ router.get("/current", requireAuth, async (req, res) => {
             where: {
                 [Op.and]: [
                     {
-                        spotId: booking.id
+                        spotId: booking.spotId
                     },
                     {
                         preview: true
