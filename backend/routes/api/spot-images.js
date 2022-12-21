@@ -13,7 +13,8 @@ const {
 } = require("../../db/models");
  //! delete a spot image 
 router.delete("/:imageId", requireAuth, async (req, res, next) => {
-  const { spotId } = req.params;
+  const spotId  = req.params.imageId;
+  // console.log(req.params)
   const spotImage = await SpotImage.findByPk(spotId);
 
   if (!spotImage) {

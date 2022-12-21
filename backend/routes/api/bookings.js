@@ -22,7 +22,7 @@ const router = express.Router();
 router.put("/:bookingId", requireAuth, async (req, res, next) => {
   const { bookingId } = req.params;
   const { startDate, endDate } = req.body;
-  const myBooking = await Booking.findAll(bookingId);
+  const myBooking = await Booking.findByPk(bookingId);
 
   if (!myBooking) {
     res.status(404);
@@ -63,9 +63,9 @@ if((myBooking.startDate >= startDate && myBooking.endDate <= endDate) || booking
 
 myBooking.startDate = startDate
 myBooking.endDate = endDate 
-booking.save()
+myBooking.save()
 
-res.json(editBooking);
+res.json(myBooking);
 
 });
 
