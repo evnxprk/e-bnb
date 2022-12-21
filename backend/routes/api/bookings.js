@@ -17,7 +17,7 @@ const booking = require("../../db/models/booking");
 
 const router = express.Router();
 
-//?! edit a booking
+//? edit a booking
 
 router.put("/:bookingId", requireAuth, async (req, res, next) => {
   const { bookingId } = req.params;
@@ -63,7 +63,7 @@ if((myBooking.startDate >= startDate && myBooking.endDate <= endDate) || booking
 
 myBooking.startDate = startDate
 myBooking.endDate = endDate 
-myBooking.save()
+await myBooking.save()
 
 res.json(myBooking);
 
@@ -71,8 +71,9 @@ res.json(myBooking);
 
 //? delete a booking
 router.delete("/:bookingId", requireAuth, async (req,res) => {
+    const { user } = req
     const myBooking = await Booking.findByPk(req.params.bookingId)
-    const mySpot = await Booking.findByPk(myBooking.spotId)
+
     if(!myBooking) {
         res.status(404)
         res.json({
@@ -80,13 +81,19 @@ router.delete("/:bookingId", requireAuth, async (req,res) => {
             statusCode: 404
         })
     }
-
-    const newDate = new Date ()
-
-    if(booking.startDate < newDate ) {
+    if(user.id !== myBooking.userId) {
         res.status(403)
         res.json({
-            message: "Bookings that have start can't be deleted",
+            message: "Forbidden",
+            statusCode: 403
+        })
+    }
+    const newDate = new Date ()
+
+    if((myBooking.startDate.getTime() <= newDate.getTime()) && (newDate.getTime() <= myBooking.endDate.getTime())) {
+        res.status(403)
+        res.json({
+            message: "Bookings that have startes can't be deleted",
             statusCode: 403
         })
     }
