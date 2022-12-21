@@ -234,7 +234,7 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
   });
 });
 
-//? edit a spot
+//! edit a spot
 
 router.put("/:spotId", requireAuth, async (req, res) => {
   const { spotId } = req.params;
