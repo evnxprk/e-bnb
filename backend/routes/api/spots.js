@@ -16,6 +16,7 @@ const { check, Result } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { route } = require("./users");
 const spot = require("../../db/models/spot.js");
+const e = require("express");
 
 // const spot = require("../../db/models/spots");
 const validateSpot = [
@@ -64,6 +65,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
     where: {
       ownerId: ownerId,
     },
+
   });
 
   const spotArr = [];
@@ -87,9 +89,12 @@ router.get("/current", requireAuth, async (req, res, next) => {
       attributes: ["url"],
     });
 
-    if (image) {
-      spot.previewImage = image.url;
+    if(image) {
+      spot.preview = image.url
+    } else {
+      spot.preview = null 
     }
+    console.log(image)
 
     spotArr.push(spot);
   }
@@ -153,7 +158,7 @@ router.get("/", async (req, res) => {
     });
   
     spot.avgRating = Number(rating[0].avgRating);
-
+   
     const imageURL = await SpotImage.findOne({
       where: {
         spotId: spot.id,
@@ -163,7 +168,9 @@ router.get("/", async (req, res) => {
     })
 
     if(imageURL) {
-      spot.previewImage = imageURL.url
+      spot.preview = imageURL.url
+    } else { 
+      spot.preview = null
     }
     spotsArr.push(spot);
   }
@@ -243,25 +250,25 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
     preview,
   });
 
-  if (!spotImage) {
-    res.status(400);
-    res.json({
-      message: "Need to provide url and preview",
-    });
-  }
+  // if (!spotImage) {
+  //   res.status(400);
+  //   res.json({
+  //     message: "Need to provide url and preview",
+  //   });
+  // }
 
-  const spotImages = await SpotImage.findOne({
-    where: {
-      spotId: req.params.spotId,
-    },
-  });
+  // const spotImages = await SpotImage.findOne({
+  //   where: {
+  //     spotId: req.params.spotId,
+  //   },
+  // });
 
-  if (!spotImages) {
-    res.status(404);
-    res.json({
-      message: "Image for this spot wasn't created",
-    });
-  }
+  // if (!spotImages) {
+  //   res.status(404);
+  //   res.json({
+  //     message: "Image for this spot wasn't created",
+  //   });
+  // }
   res.json({
     id: spotImage.id,
     url: spotImage.url,
