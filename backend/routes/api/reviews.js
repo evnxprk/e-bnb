@@ -35,42 +35,29 @@ const validateReview = [
 //? Get all Reviews of the Current User
 
 router.get("/current", requireAuth, async (req, res, next) => {
+  const userId = req.user.id;
+
   const reviews = await Review.findAll({
     where: {
-      userId: req.user.id,
+      userId: userId,
     },
     include: [
-      {
-        model: User,
-        attributes: ["id", "firstName", "lastName"],
-      },
-      {
-        model: Spot,
-        attributes: {exclude: ['createdAt', 'updatedAt']}
-      },
+      { model: User, attributes: { exclude: ['createdAt', 'updatedAt', 'hashedPassword', 'email', 'username'] } },
+      { model: Spot, attributes: { exclude: ['createdAt', 'updatedAt']}},
       {
         model: ReviewImage,
-        attributes: ["id", "url"],
+        attributes: { exclude: ["createdAt", "updatedAt", "reviewId"] },
       },
     ],
   });
 
-  let reviewArr = []
+  res.status(200);
 
-  for (let i = 0; i < reviews.length; i++) {
-    const review = reviews[i].toJSON()
-    
-    const reviewImage = await SpotImage.findByPk(review.id, {
-      where: {
-        preview: true
-      },
-      attributes: ['url']
-    })
-    review.Spot.previewImage = reviewImage.url;
-    reviewArr.push(review)
-  }
-  res.json({Reviews: reviewArr});
+  res.json({
+    Reviews: reviews,
+  });
 });
+
 
 //? Add an Image to a Review based on the Review's id
 
@@ -92,13 +79,13 @@ router.post(
       });
     }
 
-    // if (review.userId !== req.user.id) {
-    //   res.status(403);
-    //   res.json({
-    //     message: "Forbidden",
-    //     statusCode: 403,
-    //   });
-    // }
+    if (review.userId !== req.user.id) {
+      res.status(403);
+      res.json({
+        message: "Forbidden",
+        statusCode: 403,
+      });
+    }
     const reviewImage = await ReviewImage.findAll({
       where: {
         reviewId: reviewId
@@ -153,12 +140,12 @@ router.delete("/:reviewId", requireAuth, async (req, res, next) => {
   const { user } = req;
   const deleteReview = await Review.findByPk(req.params.reviewId);
 
-  // if (user.id !== deleteReview.userId) {
-  //   res.json({
-  //     message: "Forbidden",
-  //     statusCode: 403,
-  //   });
-  // }
+  if (user.id !== deleteReview.userId) {
+    res.json({
+      message: "Forbidden",
+      statusCode: 403,
+    });
+  }
   if (!deleteReview) {
     res.status(404);
     res.json({

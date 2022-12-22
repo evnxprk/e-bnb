@@ -42,9 +42,13 @@ module.exports = {
     return queryInterface.bulkDelete(
       options,
       {
-        reviewId: {
+        url: {
           [Op.in]: [
-           "1", "2", "3", "4", "5"
+            "www.fakeURL.com",
+            "www.fakeURL2.com",
+            "www.fakeURL3.com",
+            "www.fakeURL4.com",
+            "www.fakeURL5.com",
           ],
         },
       },

@@ -80,13 +80,13 @@ router.delete("/:bookingId", requireAuth, async (req,res) => {
             statusCode: 404
         })
     }
-    // if(myBooking.userId !== req.user.id) {
-    //     res.status(403)
-    //     res.json({
-    //         message: "Forbidden",
-    //         statusCode: 403
-    //     })
-    // }
+    if(myBooking.userId !== req.user.id) {
+        res.status(403)
+        res.json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    }
     const newDate = new Date ()
 
     if(myBooking.startDate >= newDate) {

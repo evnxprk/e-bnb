@@ -23,20 +23,11 @@ if(!spotImage) {
     statusCode: 404
   })
 }
-
-const spotOwner = await Spot.findByPk(spotImage.spotId)
-if(spotOwner.ownerId === req.user.id) {
   await spotImage.destroy()
   res.json({
     message: "Successfully deleted",
     statusCode: 200
   })
-} else {
-  res.json({
-    message: "Forbidden",
-    statusCode: 403
-  })
-}
 });
 
 module.exports = router;
