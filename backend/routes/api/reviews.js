@@ -35,29 +35,27 @@ const validateReview = [
 //? Get all Reviews of the Current User
 
 router.get("/current", requireAuth, async (req, res, next) => {
-  const userId = req.user.id;
-
   const reviews = await Review.findAll({
     where: {
-      userId: userId,
+      userId: req.user.id,
     },
     include: [
-      { model: User, attributes: { exclude: ['createdAt', 'updatedAt', 'hashedPassword', 'email', 'username'] } },
-      { model: Spot, attributes: { exclude: ['createdAt', 'updatedAt']}},
+      {
+        model: User,
+        attributes: ["id", "firstName", "lastName"],
+      },
+      {
+        model: Spot,
+        attributes: {exclude: ['createdAt', 'updatedAt']}
+      },
       {
         model: ReviewImage,
-        attributes: { exclude: ["createdAt", "updatedAt", "reviewId"] },
+        attributes: ["id", "url"],
       },
     ],
   });
-
-  res.status(200);
-
-  res.json({
-    Reviews: reviews,
-  });
+  res.json({Reviews: reviews});
 });
-
 
 //? Add an Image to a Review based on the Review's id
 
