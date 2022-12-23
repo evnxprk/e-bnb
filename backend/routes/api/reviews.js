@@ -71,7 +71,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
   //   } 
   //   imageArr.push(review)
   // }
-  return res.json({Reviews: imageArr});
+  return res.json({Reviews: reviews});
 });
 
 //? Add an Image to a Review based on the Review's id
@@ -81,7 +81,6 @@ router.post(
   requireAuth,
   async (req, res, next) => {
     const { url } = req.body;
-    const {id} = req.user
     const reviewId = req.params.reviewId;
 
     const review = await Review.findByPk(reviewId, {
