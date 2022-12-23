@@ -10,7 +10,8 @@ module.exports = {
     options.tableName = "ReviewImages";
     return queryInterface.bulkInsert(
       options,
-      [{
+      [
+        {
           reviewId: 1,
           url: "www.fakeURL.com",
         },
@@ -18,14 +19,19 @@ module.exports = {
           reviewId: 2,
           url: "www.fakeURL2.com",
         },
-      {
+        {
           reviewId: 3,
           url: "www.fakeURL3.com",
         },
-      {
-        reviewId: 4,
+        {
+          reviewId: 4,
           url: "www.fakeURL4.com",
-        }],
+        },
+        {
+          reviewId: 5,
+          url: "www.fakeURL5.com",
+        },
+      ],
       {}
     );
   },
@@ -38,10 +44,11 @@ module.exports = {
       {
         url: {
           [Op.in]: [
-            "www.fakeURL1.com",
+            "www.fakeURL.com",
             "www.fakeURL2.com",
             "www.fakeURL3.com",
             "www.fakeURL4.com",
+            "www.fakeURL5.com",
           ],
         },
       },

@@ -90,9 +90,9 @@ router.get("/current", requireAuth, async (req, res, next) => {
     });
 
     if(image) {
-      spot.preview = image.url
+      spot.previewImage = image.url
     } else {
-      spot.preview = null 
+      spot.previewImage = null 
     }
     console.log(image)
 
@@ -158,6 +158,9 @@ router.get("/", async (req, res) => {
     });
   
     spot.avgRating = Number(rating[0].avgRating);
+    if(!spot.avgRating) {
+      spot.avgRating = "No average rating yet!"
+    }
    
     const imageURL = await SpotImage.findOne({
       where: {
@@ -168,9 +171,9 @@ router.get("/", async (req, res) => {
     })
 
     if(imageURL) {
-      spot.preview = imageURL.url
-    } else { 
-      spot.preview = null
+      spot.previewImage = imageURL.url
+    } else {
+      spot.previewImage = "No preview image available"
     }
     spotsArr.push(spot);
   }
@@ -356,6 +359,7 @@ router.get("/:spotId/reviews", async (req, res, next) => {
       },
       {
         model: ReviewImage,
+        attributes: {exclude : ['reviewId', 'createdAt' ,'updatedAt']}
       },
     ],
   });

@@ -53,23 +53,10 @@ router.get("/current", requireAuth, async (req, res, next) => {
         attributes: ["id", "url"],
       },
     ],
-  });
 
-  let reviewArr = []
-
-  for (let i = 0; i < reviews.length; i++) {
-    const review = reviews[i].toJSON()
     
-    const reviewImage = await SpotImage.findByPk(review.id, {
-      where: {
-        preview: true
-      },
-      attributes: ['url']
-    })
-    review.Spot.previewImage = reviewImage.url;
-    reviewArr.push(review)
-  }
-  res.json({Reviews: reviewArr});
+  });
+  res.json({Reviews: reviews});
 });
 
 //? Add an Image to a Review based on the Review's id
@@ -92,13 +79,13 @@ router.post(
       });
     }
 
-    // if (review.userId !== req.user.id) {
-    //   res.status(403);
-    //   res.json({
-    //     message: "Forbidden",
-    //     statusCode: 403,
-    //   });
-    // }
+    if (review.userId !== req.user.id) {
+      res.status(403);
+      res.json({
+        message: "Forbidden",
+        statusCode: 403,
+      });
+    }
     const reviewImage = await ReviewImage.findAll({
       where: {
         reviewId: reviewId

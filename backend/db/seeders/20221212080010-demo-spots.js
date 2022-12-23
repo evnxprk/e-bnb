@@ -49,7 +49,7 @@ module.exports = {
           price: 45,
         },
         {
-          ownerId: 2,
+          ownerId: 3,
           address: "3000 Palos Verdes Blvd",
           city: "Palos Verdes",
           state: "CA",

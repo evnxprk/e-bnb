@@ -75,35 +75,34 @@ router.delete("/:bookingId", requireAuth, async (req,res) => {
 
     if(!myBooking) {
         res.status(404)
-        res.json({
+        return res.json({
             message: "Booking could not be found",
             statusCode: 404
         })
     }
-    // if(myBooking.userId !== req.user.id) {
-    //     res.status(403)
-    //     res.json({
-    //         message: "Forbidden",
-    //         statusCode: 403
-    //     })
-    // }
-    const newDate = new Date ()
+    if(myBooking.userId !== req.user.id) {
+        res.status(403)
+        return res.json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    }
+    const newDate = new Date ().getTime()
 
     if(myBooking.startDate >= newDate) {
         res.status(403)
-        res.json({
+       return res.json({
             message: "Bookings that have started can't be deleted",
             statusCode: 403
         })
-    } else { 
+    } 
         await myBooking.destroy()
         res.status(200)
-        res.json({
+        return res.json({
             message: "Successfully deleted",
             statusCode: 200
         })
-    }
-})
+    })
 
 //? get all of the current user's bookings
 
