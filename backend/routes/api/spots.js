@@ -359,6 +359,7 @@ router.get("/:spotId/reviews", async (req, res, next) => {
       },
       {
         model: ReviewImage,
+        attributes: exclude ['reviewId', 'createdAt' ,'updatedAt']
       },
     ],
   });
