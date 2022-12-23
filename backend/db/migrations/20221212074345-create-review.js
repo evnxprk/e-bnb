@@ -7,38 +7,43 @@ if (process.env.NODE_ENV === "production") {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Reviews', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+    await queryInterface.createTable(
+      "Reviews",
+      {
+        id: {
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+          type: Sequelize.INTEGER,
+        },
+        spotId: {
+          type: Sequelize.INTEGER,
+          onDelete: "CASCADE",
+          references: { model: "Spots" },
+        },
+        userId: {
+          type: Sequelize.INTEGER,
+          references: { model: "Users" },
+        },
+        review: {
+          type: Sequelize.STRING,
+        },
+        stars: {
+          type: Sequelize.INTEGER,
+        },
+        createdAt: {
+          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+          allowNull: false,
+          type: Sequelize.DATE,
+        },
+        updatedAt: {
+          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+          allowNull: false,
+          type: Sequelize.DATE,
+        },
       },
-      spotId: {
-        type: Sequelize.INTEGER,
-        references: { model: 'Spots'}
-      },
-      userId: {
-        type: Sequelize.INTEGER,
-        references: { model: 'Users' },
-      },
-      review: {
-        type: Sequelize.STRING
-      },
-      stars: {
-        type: Sequelize.INTEGER
-      },
-      createdAt: {
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-    },options);
+      options
+    );
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Reviews');

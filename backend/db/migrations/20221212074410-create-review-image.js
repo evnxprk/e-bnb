@@ -7,33 +7,38 @@ if (process.env.NODE_ENV === "production") {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ReviewImages', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      reviewId: {
-        references: {
-          model: 'Reviews'
+    await queryInterface.createTable(
+      "ReviewImages",
+      {
+        id: {
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+          type: Sequelize.INTEGER,
         },
-        type: Sequelize.INTEGER
+        reviewId: {
+          references: {
+            model: "Reviews",
+          },
+          onDelete: "CASCADE",
+          type: Sequelize.INTEGER,
+        },
+        url: {
+          type: Sequelize.STRING,
+        },
+        createdAt: {
+          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+          allowNull: false,
+          type: Sequelize.DATE,
+        },
+        updatedAt: {
+          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+          allowNull: false,
+          type: Sequelize.DATE,
+        },
       },
-      url: {
-        type: Sequelize.STRING
-      },
-      createdAt: {
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-    },options);
+      options
+    );
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('ReviewImages');

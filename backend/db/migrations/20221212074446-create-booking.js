@@ -8,42 +8,47 @@ if (process.env.NODE_ENV === "production") {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Bookings', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      spotId: {
-        references: {
-          model: 'Spots'
+    await queryInterface.createTable(
+      "Bookings",
+      {
+        id: {
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+          type: Sequelize.INTEGER,
         },
-        type: Sequelize.INTEGER
-      },
-      userId: {
-        references: {
-          model: 'Users'
+        spotId: {
+          references: {
+            model: "Spots",
+          },
+          onDelete: "CASCADE",
+          type: Sequelize.INTEGER,
         },
-        type: Sequelize.INTEGER
+        userId: {
+          references: {
+            model: "Users",
+          },
+          type: Sequelize.INTEGER,
+        },
+        startDate: {
+          type: Sequelize.DATEONLY,
+        },
+        endDate: {
+          type: Sequelize.DATEONLY,
+        },
+        createdAt: {
+          allowNull: false,
+          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+          type: Sequelize.DATE,
+        },
+        updatedAt: {
+          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+          allowNull: false,
+          type: Sequelize.DATE,
+        },
       },
-      startDate: {
-        type: Sequelize.DATEONLY
-      },
-      endDate: {
-        type: Sequelize.DATEONLY
-      },
-      createdAt: {
-        allowNull: false,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-    },options);
+      options
+    );
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Bookings');
