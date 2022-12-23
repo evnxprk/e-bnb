@@ -71,7 +71,11 @@ res.json(myBooking);
 
 //? delete a booking
 router.delete("/:bookingId", requireAuth, async (req,res) => {
-    const myBooking = await Booking.findByPk(req.params.bookingId)
+    const myBooking = await Booking.findByPk(req.params.bookingId, {
+        where: {
+            userId: req.user.id
+        }
+    })
 
     if(!myBooking) {
         res.status(404)
@@ -80,13 +84,7 @@ router.delete("/:bookingId", requireAuth, async (req,res) => {
             statusCode: 404
         })
     }
-    // if(myBooking.userId !== req.user.id) {
-    //     res.status(403)
-    //     res.json({
-    //         message: "Forbidden",
-    //         statusCode: 403
-    //     })
-    // }
+
     const newDate = new Date ()
 
     if(myBooking.startDate >= newDate) {
