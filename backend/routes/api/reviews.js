@@ -69,7 +69,11 @@ router.post(
     const {id} = req.user
     const reviewId = req.params.reviewId;
 
-    const review = await Review.findByPk(reviewId);
+    const review = await Review.findByPk(reviewId, {
+      where: {
+        userId: req.user.id
+      }
+    });
 
     if (!review) {
       res.status(404);
@@ -79,13 +83,13 @@ router.post(
       });
     }
 
-    if (review.userId !== req.user.id) {
-      res.status(403);
-      res.json({
-        message: "Forbidden",
-        statusCode: 403,
-      });
-    }
+    // if (review.userId !== req.user.id) {
+    //   res.status(403);
+    //   res.json({
+    //     message: "Forbidden",
+    //     statusCode: 403,
+    //   });
+    // }
     const reviewImage = await ReviewImage.findAll({
       where: {
         reviewId: reviewId
