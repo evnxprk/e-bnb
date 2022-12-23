@@ -95,13 +95,14 @@ router.delete("/:bookingId", requireAuth, async (req,res) => {
             message: "Bookings that have started can't be deleted",
             statusCode: 403
         })
+    } else { 
+        await myBooking.destroy()
+        res.status(200)
+        res.json({
+            message: "Successfully deleted",
+            statusCode: 200
+        })
     }
-    await myBooking.destroy()
-    res.status(200)
-    res.json({
-        message: "Successfully deleted",
-        statusCode: 200
-    })
 })
 
 //? get all of the current user's bookings
