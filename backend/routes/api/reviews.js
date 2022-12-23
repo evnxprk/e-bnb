@@ -56,21 +56,21 @@ router.get("/current", requireAuth, async (req, res, next) => {
       },
     ],
   });
-  let imageArr = []
+  // let imageArr = []
 
-  for(let review of reviews ){
-    review = review.toJSON()
-    const image = await SpotImage.findByPk(review.id, {
-      where: {
-        preview: true
-      },
-      attributes: ['url']
-    })
-    if(image) {
-      review.SpotImage.previewImage = image.dataValues.url
-    } 
-    imageArr.push(review)
-  }
+  // for(let review of reviews ){
+  //   review = review.toJSON()
+  //   const image = await SpotImage.findByPk(review.id, {
+  //     where: {
+  //       preview: true
+  //     },
+  //     attributes: ['url']
+  //   })
+  //   if(image) {
+  //     review.SpotImage.previewImage = image.dataValues.url
+  //   } 
+  //   imageArr.push(review)
+  // }
   return res.json({Reviews: imageArr});
 });
 
