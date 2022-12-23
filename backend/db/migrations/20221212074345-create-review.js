@@ -19,6 +19,7 @@ module.exports = {
         spotId: {
           type: Sequelize.INTEGER,
           onDelete: "CASCADE",
+          hooks: true,
           references: { model: "Spots" },
         },
         userId: {
