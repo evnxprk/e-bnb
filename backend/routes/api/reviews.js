@@ -46,17 +46,32 @@ router.get("/current", requireAuth, async (req, res, next) => {
       },
       {
         model: Spot,
-        attributes: {exclude: ['createdAt', 'updatedAt']}
+        attributes: { 
+          exclude: ['createdAt', 'updatedAt']
+        }
       },
       {
         model: ReviewImage,
         attributes: ["id", "url"],
       },
     ],
-
-    
   });
-  res.json({Reviews: reviews});
+  let imageArr = []
+
+  for(let review of reviews ){
+    review = review.toJSON()
+    const image = await SpotImage.findByPk(review.id, {
+      where: {
+        preview: true
+      },
+      attributes: ['url']
+    })
+    if(image) {
+      review.SpotImage.previewImage = image.dataValues.url
+    } 
+    imageArr.push(review)
+  }
+  return res.json({Reviews: imageArr});
 });
 
 //? Add an Image to a Review based on the Review's id
