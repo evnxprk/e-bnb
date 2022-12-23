@@ -29,6 +29,7 @@ router.get("/", (req, res, next) => {
   } else return res.json({ user: null });
 });
 
+ //login 
 router.post("/", validateLogin, async (req, res, next) => {
   const { credential, password } = req.body;
   const user = await User.login({ credential, password });

@@ -92,7 +92,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
     if(image) {
       spot.previewImage = image.url
     } else {
-      spot.previewImage = null 
+      spot.previewImage = "No preview image available" 
     }
     console.log(image)
 
