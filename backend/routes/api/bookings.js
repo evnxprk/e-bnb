@@ -42,7 +42,7 @@ router.put("/:bookingId", requireAuth, async (req, res, next) => {
       },
     });
 }
-if(endDate < myBooking.endDate) {
+if(endDate <= myBooking.endDate) {
     res.status(403)
     res.json({
         message: "Past bookings cannot be modified",
