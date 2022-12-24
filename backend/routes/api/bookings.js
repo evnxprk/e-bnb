@@ -42,14 +42,14 @@ router.put("/:bookingId", requireAuth, async (req, res, next) => {
       },
     });
 }
-if(endDate <= myBooking.endDate) {
-    res.status(403)
+if(endDate <= new Date ().endDate) {
+        res.status(403)
     res.json({
         message: "Past bookings cannot be modified",
         statusCode: 403
     })
 }
-if((myBooking.startDate >= startDate && myBooking.endDate <= endDate) || booking.startDate <= startDate && myBooking.endDate >= endDate) {
+if((myBooking.startDate >= new Date(startDate).getTime() && myBooking.endDate <= new Date (endDate).getTime()) || booking.startDate <= new Date (startDate).getTime() && myBooking.endDate >= new Date(endDate)) {
     res.status(403)
     res.json({
       message: "Sorry, this spot is already booked for the specified dates",
