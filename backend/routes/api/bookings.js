@@ -68,7 +68,7 @@ myBooking.startDate = startDate
 myBooking.endDate = endDate 
 await myBooking.save()
 
-res.json(myBooking);
+return res.json(myBooking);
 
 });
 
