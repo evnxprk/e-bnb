@@ -44,10 +44,10 @@ router.put("/:bookingId", requireAuth, async (req, res, next) => {
 }
 const rn = new Date();
 const pastEndDate = new Date(myBooking.endDate);
-// const pastStartDate = new Date(myBooking.startDate);
-if (pastEndDate.getTime() <= rn.getTime()) {
+const pastStartDate = new Date(myBooking.startDate);
+if (pastEndDate.getTime() <= rn.getTime() || pastStartDate.getTime() <= rn.getTime()) {
   res.status(403);
-  res.json({
+  return res.json({
     message: "Past bookings cannot be modified",
     statusCode: 403,
   });
