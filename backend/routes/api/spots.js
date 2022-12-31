@@ -486,7 +486,7 @@ router.post("/:spotId/bookings", requireAuth, async (req, res) => {
     },
   });
 
-  if (new Date (startDate).getTime() < new Date().getTime() || new Date (endDate).getTime() < new Date().getTime()) {
+  if ((new Date (startDate).getTime() < new Date().getTime()) || (new Date (endDate).getTime() < new Date().getTime())) {
      res.status(403);
      return res.json({
        message: "Cannot be created in the past",
