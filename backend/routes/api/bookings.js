@@ -64,7 +64,19 @@ if((myBooking.startDate >= startDate && myBooking.endDate <= endDate) || booking
         endDate: "End date conflicts with an existing booking",
       },
     });
-} 
+}
+
+if (startDate < new Date().getTime() || endDate <= new Date().getTime()) {
+    res.status(403)
+    return res.json({
+        message: "Sorry, dates can not be changed to the fast",
+        statusCode: 403,
+        errors: {
+            "startDate": "Cannot be changed to the past",
+            "endDate": "Cannot be changed to the past"
+        }
+    })
+}
 
 myBooking.startDate = startDate
 myBooking.endDate = endDate 
